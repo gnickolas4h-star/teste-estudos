@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Estudos - IFBA</title>
+    <style>
+        :root {
+            --bg: #121214;
+            --surface: #202024;
+            --primary: #00875f;
+            --text: #e1e1e6;
+            --text-dim: #a8a8b3;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        header { background: var(--surface); padding: 1.5rem; text-align: center; border-bottom: 2px solid var(--primary); }
+        header h1 { font-size: 1.5rem; color: #fff; }
+        header p { color: var(--text-dim); font-size: 0.9rem; margin-top: 0.3rem; }
+        main { display: flex; flex: 1; flex-direction: column; padding: 1rem; gap: 1rem; max-width: 1000px; margin: 0 auto; width: 100%; }
+        @media(min-width: 768px) { main { flex-direction: row; } }
+        nav { background: var(--surface); padding: 1rem; border-radius: 8px; width: 100%; }
+        @media(min-width: 768px) { nav { width: 250px; flex-shrink: 0; } }
+        nav h2 { font-size: 1.1rem; margin-bottom: 0.8rem; color: var(--primary); }
+        nav ul { list-style: none; }
+        nav li { margin-bottom: 0.5rem; }
+        nav a { color: var(--text); text-decoration: none; padding: 0.5rem; display: block; border-radius: 4px; transition: 0.2s; }
+        nav a:hover { background: rgba(0, 135, 95, 0.2); color: #fff; }
+        section { background: var(--surface); padding: 1.5rem; border-radius: 8px; flex: 1; }
+        section h2 { margin-bottom: 1rem; color: var(--primary); }
+        .card { background: var(--bg); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid var(--primary); }
+        .card h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+        .card p { color: var(--text-dim); font-size: 0.9rem; }
+        footer { text-align: center; padding: 1rem; color: var(--text-dim); font-size: 0.8rem; border-top: 1px solid var(--surface); margin-top: auto; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Portal de Estudos da Turma</h1>
+        <p>Anotações, listas de exercícios e materiais do IFBA</p>
+    </header>
+
+    <main>
+        <nav>
+            <h2>Matérias</h2>
+            <ul>
+                <li><a href="#redes">Redes de Computadores</a></li>
+                <li><a href="#algoritmos">Algoritmos (C)</a></li>
+                <li><a href="#inf-basica">Informática Básica</a></li>
+            </ul>
+        </nav>
+
+        <section>
+            <h2>Últimas Atualizações</h2>
+
+            <article class="card" id="redes">
+                <h3>Redes: Conceitos de VLAN</h3>
+                <p>Uma VLAN (Virtual Local Area Network) permite segmentar redes fisicamente iguais em redes lógicas diferentes dentro de um mesmo switch...</p>
+            </article>
+
+            <article class="card" id="algoritmos">
+                <h3>Algoritmos: Estrutura Básica em C</h3>
+                <p>Exemplo de código compilável em C para exibição de mensagens no terminal:</p>
+                <code style="display:block; background:#121214; padding:0.5rem; margin-top:0.5rem; border-radius:4px; color:#50fa7b;">
+                    #include &lt;stdio.h&gt;<br><br>
+                    int main() {<br>
+                    &nbsp;&nbsp;printf("Hello World!");<br>
+                    &nbsp;&nbsp;return 0;<br>
+                    }
+                </code>
+            </article>
+
+            <article class="card" id="inf-basica">
+                <h3>Informática Básica: Histórico de S.O.</h3>
+                <p>Resumo sobre a evolução dos sistemas operacionais desde os sistemas em lote (batch) até os modernos com interface gráfica.</p>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>Mantido e atualizado pelos estudantes do IFBA</p>
+    </footer>
+
+</body>
+</html>
