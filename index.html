@@ -24,13 +24,19 @@
         nav h2 { font-size: 1.1rem; margin-bottom: 0.8rem; color: var(--primary); }
         nav ul { list-style: none; }
         nav li { margin-bottom: 0.5rem; }
-        nav a { color: var(--text); text-decoration: none; padding: 0.5rem; display: block; border-radius: 4px; transition: 0.2s; }
+        nav a { color: var(--text); text-decoration: none; padding: 0.5rem; display: block; border-radius: 4px; transition: 0.2s; cursor: pointer; }
         nav a:hover { background: rgba(0, 135, 95, 0.2); color: #fff; }
+        nav a.ativo { background: var(--primary); color: #fff; font-weight: 600; }
         section { background: var(--surface); padding: 1.5rem; border-radius: 8px; flex: 1; }
-        section h2 { margin-bottom: 1rem; color: var(--primary); }
+        section h2 { margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; justify-content: space-between; }
         .card { background: var(--bg); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid var(--primary); }
         .card h3 { font-size: 1rem; margin-bottom: 0.4rem; }
         .card p { color: var(--text-dim); font-size: 0.9rem; }
+        .card .materia-tag { display: inline-block; font-size: 0.75rem; color: var(--primary); background: rgba(0,135,95,0.15); padding: 0.15rem 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; }
+        .card a.link { display: inline-block; margin-top: 0.5rem; font-size: 0.85rem; color: var(--primary); text-decoration: none; }
+        .card a.link:hover { text-decoration: underline; }
+        .estado-msg { color: var(--text-dim); font-size: 0.9rem; padding: 1rem 0; }
+        code { display:block; background:#121214; padding:0.5rem; margin-top:0.5rem; border-radius:4px; color:#50fa7b; }
         footer { text-align: center; padding: 1rem; color: var(--text-dim); font-size: 0.8rem; border-top: 1px solid var(--surface); margin-top: auto; }
     </style>
 </head>
@@ -44,37 +50,16 @@
     <main>
         <nav>
             <h2>Matérias</h2>
-            <ul>
-                <li><a href="#redes">Redes de Computadores</a></li>
-                <li><a href="#algoritmos">Algoritmos (C)</a></li>
-                <li><a href="#inf-basica">Informática Básica</a></li>
+            <ul id="lista-materias">
+                <li><a data-materia="" class="ativo">Todas</a></li>
             </ul>
         </nav>
 
         <section>
-            <h2>Últimas Atualizações</h2>
-
-            <article class="card" id="redes">
-                <h3>Redes: Conceitos de VLAN</h3>
-                <p>Uma VLAN (Virtual Local Area Network) permite segmentar redes fisicamente iguais em redes lógicas diferentes dentro de um mesmo switch...</p>
-            </article>
-
-            <article class="card" id="algoritmos">
-                <h3>Algoritmos: Estrutura Básica em C</h3>
-                <p>Exemplo de código compilável em C para exibição de mensagens no terminal:</p>
-                <code style="display:block; background:#121214; padding:0.5rem; margin-top:0.5rem; border-radius:4px; color:#50fa7b;">
-                    #include &lt;stdio.h&gt;<br><br>
-                    int main() {<br>
-                    &nbsp;&nbsp;printf("Hello World!");<br>
-                    &nbsp;&nbsp;return 0;<br>
-                    }
-                </code>
-            </article>
-
-            <article class="card" id="inf-basica">
-                <h3>Informática Básica: Histórico de S.O.</h3>
-                <p>Resumo sobre a evolução dos sistemas operacionais desde os sistemas em lote (batch) até os modernos com interface gráfica.</p>
-            </article>
+            <h2>Atividades</h2>
+            <div id="lista-atividades">
+                <p class="estado-msg">Carregando atividades...</p>
+            </div>
         </section>
     </main>
 
@@ -82,5 +67,87 @@
         <p>Mantido e atualizado pelos estudantes do IFBA</p>
     </footer>
 
+    <!-- Biblioteca do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ---- Configuração do Supabase ----
+        const SUPABASE_URL = "https://vpcopfmyvpiisrbyuvvl.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwY29wZm15dnBpaXNyYnl1dnZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NzA5MTIsImV4cCI6MjEwMzQ0NjkxMn0._zQ7AYq0rvwgSd8yuXs_rF5czJmTvauIG4h7UnHQIfU";
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let todasAtividades = [];
+        let filtroAtual = "";
+
+        async function carregarAtividades() {
+            const container = document.getElementById("lista-atividades");
+
+            const { data, error } = await supabaseClient
+                .from("atividades")
+                .select("*")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                container.innerHTML = `<p class="estado-msg">Não foi possível carregar as atividades agora.</p>`;
+                console.error(error);
+                return;
+            }
+
+            todasAtividades = data || [];
+            montarMenuMaterias();
+            renderizarAtividades();
+        }
+
+        // Monta o menu lateral com as matérias que realmente existem nas atividades cadastradas
+        function montarMenuMaterias() {
+            const lista = document.getElementById("lista-materias");
+            const materias = [...new Set(todasAtividades.map(a => a.materia).filter(Boolean))].sort();
+
+            const itensExtras = materias.map(materia => `
+                <li><a data-materia="${escapeHtml(materia)}">${escapeHtml(materia)}</a></li>
+            `).join("");
+
+            lista.innerHTML = `<li><a data-materia="" class="ativo">Todas</a></li>${itensExtras}`;
+
+            lista.querySelectorAll("a").forEach(link => {
+                link.addEventListener("click", () => {
+                    filtroAtual = link.dataset.materia;
+                    lista.querySelectorAll("a").forEach(a => a.classList.remove("ativo"));
+                    link.classList.add("ativo");
+                    renderizarAtividades();
+                });
+            });
+        }
+
+        function renderizarAtividades() {
+            const container = document.getElementById("lista-atividades");
+            const dados = filtroAtual
+                ? todasAtividades.filter(a => a.materia === filtroAtual)
+                : todasAtividades;
+
+            if (dados.length === 0) {
+                container.innerHTML = `<p class="estado-msg">Nenhuma atividade encontrada.</p>`;
+                return;
+            }
+
+            container.innerHTML = dados.map(atividade => `
+                <article class="card">
+                    ${atividade.materia ? `<span class="materia-tag">${escapeHtml(atividade.materia)}</span>` : ""}
+                    <h3>${escapeHtml(atividade.titulo)}</h3>
+                    <p>${escapeHtml(atividade.descricao || "")}</p>
+                    ${atividade.link ? `<a class="link" href="${escapeHtml(atividade.link)}" target="_blank" rel="noopener">Abrir material →</a>` : ""}
+                </article>
+            `).join("");
+        }
+
+        // Evita que texto vindo do banco quebre o HTML da página
+        function escapeHtml(texto) {
+            const div = document.createElement("div");
+            div.textContent = texto;
+            return div.innerHTML;
+        }
+
+        carregarAtividades();
+    </script>
 </body>
 </html>
