@@ -11,12 +11,21 @@
             --primary: #00875f;
             --text: #e1e1e6;
             --text-dim: #a8a8b3;
+            --danger: #e34a4a;
+            --warning: #f5a623;
+        }
+        body.light {
+            --bg: #f5f5f7;
+            --surface: #ffffff;
+            --text: #1a1a1e;
+            --text-dim: #6e6e78;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
-        header { background: var(--surface); padding: 1.5rem; text-align: center; border-bottom: 2px solid var(--primary); }
-        header h1 { font-size: 1.5rem; color: #fff; }
+        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; transition: background 0.2s, color 0.2s; }
+        header { background: var(--surface); padding: 1.5rem; text-align: center; border-bottom: 2px solid var(--primary); position: relative; }
+        header h1 { font-size: 1.5rem; color: var(--text); }
         header p { color: var(--text-dim); font-size: 0.9rem; margin-top: 0.3rem; }
+        #btn-tema { position: absolute; top: 1.3rem; right: 1.5rem; background: transparent; border: 1px solid var(--text-dim); color: var(--text); padding: 0.4rem 0.7rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
         main { display: flex; flex: 1; flex-direction: column; padding: 1rem; gap: 1rem; max-width: 1000px; margin: 0 auto; width: 100%; }
         @media(min-width: 768px) { main { flex-direction: row; } }
         nav { background: var(--surface); padding: 1rem; border-radius: 8px; width: 100%; }
@@ -28,15 +37,43 @@
         nav a:hover { background: rgba(0, 135, 95, 0.2); color: #fff; }
         nav a.ativo { background: var(--primary); color: #fff; font-weight: 600; }
         section { background: var(--surface); padding: 1.5rem; border-radius: 8px; flex: 1; }
-        section h2 { margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; justify-content: space-between; }
-        .card { background: var(--bg); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid var(--primary); }
+        section h2 { margin-bottom: 1rem; color: var(--primary); }
+
+        .resumo { background: rgba(0,135,95,0.08); border: 1px solid rgba(0,135,95,0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.2rem; }
+        .resumo h3 { font-size: 0.95rem; color: var(--primary); margin-bottom: 0.6rem; }
+        .resumo ul { list-style: none; }
+        .resumo li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; padding: 0.3rem 0; flex-wrap: wrap; }
+        .resumo .dia-tag { font-size: 0.72rem; font-weight: 600; padding: 0.1rem 0.45rem; border-radius: 4px; }
+        .resumo .dia-hoje { background: rgba(227,74,74,0.18); color: var(--danger); }
+        .resumo .dia-amanha { background: rgba(245,166,35,0.18); color: var(--warning); }
+        .resumo .dia-futuro { background: rgba(168,168,179,0.2); color: var(--text-dim); }
+        .resumo .estado-msg { padding: 0; }
+
+        .filtro-tipo { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .filtro-tipo button { background: var(--bg); border: 1px solid rgba(168,168,179,0.3); color: var(--text-dim); padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.85rem; cursor: pointer; }
+        .filtro-tipo button.ativo { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        .controles { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.2rem; align-items: center; }
+        .controles input[type="text"] { flex: 1; min-width: 160px; background: var(--bg); border: 1px solid rgba(168,168,179,0.3); color: var(--text); padding: 0.5rem 0.7rem; border-radius: 6px; font-size: 0.9rem; }
+        .controles select { background: var(--bg); border: 1px solid rgba(168,168,179,0.3); color: var(--text); padding: 0.5rem 0.7rem; border-radius: 6px; font-size: 0.9rem; }
+        .controles label { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--text-dim); white-space: nowrap; }
+        .card { background: var(--bg); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid var(--primary); transition: opacity 0.2s; }
+        .card.prova { border-left-color: var(--danger); }
+        .card.concluida { opacity: 0.5; }
+        .card.concluida h3 { text-decoration: line-through; }
         .card h3 { font-size: 1rem; margin-bottom: 0.4rem; }
         .card p { color: var(--text-dim); font-size: 0.9rem; }
-        .card .materia-tag { display: inline-block; font-size: 0.75rem; color: var(--primary); background: rgba(0,135,95,0.15); padding: 0.15rem 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; }
+        .card .topo-card { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin-bottom: 0.5rem; }
+        .card .materia-tag { display: inline-block; font-size: 0.75rem; color: var(--primary); background: rgba(0,135,95,0.15); padding: 0.15rem 0.5rem; border-radius: 4px; }
+        .card .prova-tag { display: inline-block; font-size: 0.75rem; font-weight: 600; color: var(--danger); background: rgba(227,74,74,0.15); padding: 0.15rem 0.5rem; border-radius: 4px; }
+        .badge { display: inline-block; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 4px; }
+        .badge-atrasada { background: rgba(227,74,74,0.15); color: var(--danger); }
+        .badge-hoje { background: rgba(245,166,35,0.15); color: var(--warning); }
+        .badge-prazo { background: rgba(168,168,179,0.2); color: var(--text-dim); }
+        .badge-concluida { background: rgba(0,135,95,0.15); color: var(--primary); }
         .card a.link { display: inline-block; margin-top: 0.5rem; font-size: 0.85rem; color: var(--primary); text-decoration: none; }
         .card a.link:hover { text-decoration: underline; }
         .estado-msg { color: var(--text-dim); font-size: 0.9rem; padding: 1rem 0; }
-        code { display:block; background:#121214; padding:0.5rem; margin-top:0.5rem; border-radius:4px; color:#50fa7b; }
         footer { text-align: center; padding: 1rem; color: var(--text-dim); font-size: 0.8rem; border-top: 1px solid var(--surface); margin-top: auto; }
     </style>
 </head>
@@ -45,6 +82,7 @@
     <header>
         <h1>Portal de Estudos da Turma</h1>
         <p>Anotações, listas de exercícios e materiais do IFBA</p>
+        <button id="btn-tema" title="Alternar tema claro/escuro">🌙 Escuro</button>
     </header>
 
     <main>
@@ -57,6 +95,28 @@
 
         <section>
             <h2>Atividades</h2>
+
+            <div class="resumo">
+                <h3>📌 Fique de olho — próximos 7 dias</h3>
+                <ul id="lista-resumo"><li class="estado-msg">Carregando...</li></ul>
+            </div>
+
+            <div class="filtro-tipo" id="filtro-tipo">
+                <button data-tipo="" class="ativo">Todos</button>
+                <button data-tipo="atividade">Atividades</button>
+                <button data-tipo="prova">Provas</button>
+            </div>
+
+            <div class="controles">
+                <input type="text" id="busca" placeholder="Buscar por título...">
+                <select id="ordenar">
+                    <option value="recentes">Mais recentes</option>
+                    <option value="materia">Matéria</option>
+                    <option value="prazo">Prazo mais próximo</option>
+                </select>
+                <label><input type="checkbox" id="ocultar-concluidas"> Ocultar concluídas</label>
+            </div>
+
             <div id="lista-atividades">
                 <p class="estado-msg">Carregando atividades...</p>
             </div>
@@ -67,17 +127,15 @@
         <p>Mantido e atualizado pelos estudantes do IFBA</p>
     </footer>
 
-    <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ---- Configuração do Supabase ----
         const SUPABASE_URL = "https://vpcopfmyvpiisrbyuvvl.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwY29wZm15dnBpaXNyYnl1dnZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NzA5MTIsImV4cCI6MjEwMzQ0NjkxMn0._zQ7AYq0rvwgSd8yuXs_rF5czJmTvauIG4h7UnHQIfU";
-
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let todasAtividades = [];
-        let filtroAtual = "";
+        let filtroMateria = "";
+        let filtroTipo = "";
 
         async function carregarAtividades() {
             const container = document.getElementById("lista-atividades");
@@ -95,23 +153,24 @@
 
             todasAtividades = data || [];
             montarMenuMaterias();
+            montarResumo();
             renderizarAtividades();
         }
 
-        // Monta o menu lateral com as matérias que realmente existem nas atividades cadastradas
         function montarMenuMaterias() {
             const lista = document.getElementById("lista-materias");
+            const materiaAtiva = filtroMateria;
             const materias = [...new Set(todasAtividades.map(a => a.materia).filter(Boolean))].sort();
 
             const itensExtras = materias.map(materia => `
-                <li><a data-materia="${escapeHtml(materia)}">${escapeHtml(materia)}</a></li>
+                <li><a data-materia="${escapeHtml(materia)}" class="${materia === materiaAtiva ? 'ativo' : ''}">${escapeHtml(materia)}</a></li>
             `).join("");
 
-            lista.innerHTML = `<li><a data-materia="" class="ativo">Todas</a></li>${itensExtras}`;
+            lista.innerHTML = `<li><a data-materia="" class="${materiaAtiva === '' ? 'ativo' : ''}">Todas</a></li>${itensExtras}`;
 
             lista.querySelectorAll("a").forEach(link => {
                 link.addEventListener("click", () => {
-                    filtroAtual = link.dataset.materia;
+                    filtroMateria = link.dataset.materia;
                     lista.querySelectorAll("a").forEach(a => a.classList.remove("ativo"));
                     link.classList.add("ativo");
                     renderizarAtividades();
@@ -119,11 +178,101 @@
             });
         }
 
+        // Resumo: tudo com prazo nos próximos 7 dias, ainda não concluído
+        function montarResumo() {
+            const container = document.getElementById("lista-resumo");
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            const limite = new Date(hoje);
+            limite.setDate(limite.getDate() + 7);
+
+            const proximos = todasAtividades
+                .filter(a => !a.concluida && a.data_entrega)
+                .filter(a => {
+                    const d = new Date(a.data_entrega + "T00:00:00");
+                    return d >= hoje && d <= limite;
+                })
+                .sort((a, b) => new Date(a.data_entrega) - new Date(b.data_entrega));
+
+            if (proximos.length === 0) {
+                container.innerHTML = `<li class="estado-msg">Nada previsto pros próximos 7 dias 🎉</li>`;
+                return;
+            }
+
+            container.innerHTML = proximos.map(a => {
+                const d = new Date(a.data_entrega + "T00:00:00");
+                const diffDias = Math.round((d - hoje) / 86400000);
+                let tagDia, classeDia;
+                if (diffDias === 0) { tagDia = "Hoje"; classeDia = "dia-hoje"; }
+                else if (diffDias === 1) { tagDia = "Amanhã"; classeDia = "dia-amanha"; }
+                else { tagDia = `Em ${diffDias} dias`; classeDia = "dia-futuro"; }
+
+                const rotuloTipo = a.tipo === "prova" ? "🔴 Prova" : "📝";
+                return `<li><span class="dia-tag ${classeDia}">${tagDia}</span> ${rotuloTipo} ${escapeHtml(a.titulo)}${a.materia ? " — " + escapeHtml(a.materia) : ""}</li>`;
+            }).join("");
+        }
+
+        function calcularBadgePrazo(atividade) {
+            if (atividade.concluida) return `<span class="badge badge-concluida">Concluída</span>`;
+            if (!atividade.data_entrega) return "";
+
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            const entrega = new Date(atividade.data_entrega + "T00:00:00");
+            const diffDias = Math.round((entrega - hoje) / 86400000);
+
+            if (diffDias < 0) return `<span class="badge badge-atrasada">Atrasada</span>`;
+            if (diffDias === 0) return `<span class="badge badge-hoje">Entrega hoje</span>`;
+            if (diffDias === 1) return `<span class="badge badge-prazo">Entrega amanhã</span>`;
+            return `<span class="badge badge-prazo">Em ${diffDias} dias</span>`;
+        }
+
+        function formatarData(dataStr) {
+            if (!dataStr) return "";
+            const d = new Date(dataStr + "T00:00:00");
+            return d.toLocaleDateString("pt-BR");
+        }
+
+        function ordenarLista(lista, criterio) {
+            const copia = [...lista];
+            if (criterio === "materia") {
+                copia.sort((a, b) => (a.materia || "").localeCompare(b.materia || "") || new Date(b.created_at) - new Date(a.created_at));
+            } else if (criterio === "prazo") {
+                copia.sort((a, b) => {
+                    if (!a.data_entrega && !b.data_entrega) return 0;
+                    if (!a.data_entrega) return 1;
+                    if (!b.data_entrega) return -1;
+                    return new Date(a.data_entrega) - new Date(b.data_entrega);
+                });
+            } else {
+                copia.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            }
+            return copia;
+        }
+
         function renderizarAtividades() {
             const container = document.getElementById("lista-atividades");
-            const dados = filtroAtual
-                ? todasAtividades.filter(a => a.materia === filtroAtual)
+            const termoBusca = document.getElementById("busca").value.trim().toLowerCase();
+            const ocultarConcluidas = document.getElementById("ocultar-concluidas").checked;
+            const criterioOrdem = document.getElementById("ordenar").value;
+
+            let dados = filtroMateria
+                ? todasAtividades.filter(a => a.materia === filtroMateria)
                 : todasAtividades;
+
+            if (filtroTipo) {
+                dados = dados.filter(a => (a.tipo || "atividade") === filtroTipo);
+            }
+
+            if (termoBusca) {
+                dados = dados.filter(a => (a.titulo || "").toLowerCase().includes(termoBusca));
+            }
+
+            if (ocultarConcluidas) {
+                dados = dados.filter(a => !a.concluida);
+            }
+
+            dados = ordenarLista(dados, criterioOrdem);
 
             if (dados.length === 0) {
                 container.innerHTML = `<p class="estado-msg">Nenhuma atividade encontrada.</p>`;
@@ -131,21 +280,43 @@
             }
 
             container.innerHTML = dados.map(atividade => `
-                <article class="card">
-                    ${atividade.materia ? `<span class="materia-tag">${escapeHtml(atividade.materia)}</span>` : ""}
+                <article class="card ${atividade.concluida ? 'concluida' : ''} ${atividade.tipo === 'prova' ? 'prova' : ''}">
+                    <div class="topo-card">
+                        ${atividade.materia ? `<span class="materia-tag">${escapeHtml(atividade.materia)}</span>` : ""}
+                        ${atividade.tipo === "prova" ? `<span class="prova-tag">Prova</span>` : ""}
+                        ${calcularBadgePrazo(atividade)}
+                    </div>
                     <h3>${escapeHtml(atividade.titulo)}</h3>
                     <p>${escapeHtml(atividade.descricao || "")}</p>
+                    ${atividade.data_entrega ? `<p style="margin-top:0.4rem; font-size:0.8rem;">Data: ${formatarData(atividade.data_entrega)}</p>` : ""}
                     ${atividade.link ? `<a class="link" href="${escapeHtml(atividade.link)}" target="_blank" rel="noopener">Abrir material →</a>` : ""}
                 </article>
             `).join("");
         }
 
-        // Evita que texto vindo do banco quebre o HTML da página
         function escapeHtml(texto) {
             const div = document.createElement("div");
             div.textContent = texto;
             return div.innerHTML;
         }
+
+        document.getElementById("btn-tema").addEventListener("click", () => {
+            const claro = document.body.classList.toggle("light");
+            document.getElementById("btn-tema").textContent = claro ? "☀️ Claro" : "🌙 Escuro";
+        });
+
+        document.getElementById("filtro-tipo").querySelectorAll("button").forEach(btn => {
+            btn.addEventListener("click", () => {
+                filtroTipo = btn.dataset.tipo;
+                document.getElementById("filtro-tipo").querySelectorAll("button").forEach(b => b.classList.remove("ativo"));
+                btn.classList.add("ativo");
+                renderizarAtividades();
+            });
+        });
+
+        document.getElementById("busca").addEventListener("input", renderizarAtividades);
+        document.getElementById("ordenar").addEventListener("change", renderizarAtividades);
+        document.getElementById("ocultar-concluidas").addEventListener("change", renderizarAtividades);
 
         carregarAtividades();
     </script>
