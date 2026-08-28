@@ -289,7 +289,7 @@
                     <h3>${escapeHtml(atividade.titulo)}</h3>
                     <p>${escapeHtml(atividade.descricao || "")}</p>
                     ${atividade.data_entrega ? `<p style="margin-top:0.4rem; font-size:0.8rem;">Data: ${formatarData(atividade.data_entrega)}</p>` : ""}
-                    ${atividade.link ? `<a class="link" href="${escapeHtml(atividade.link)}" target="_blank" rel="noopener">Abrir material →</a>` : ""}
+                    ${atividade.link ? `<a class="link" href="${escapeHtml(atividade.link)}" target="_blank" rel="noopener">${rotuloDoLink(atividade.link)} →</a>` : ""}
                 </article>
             `).join("");
         }
@@ -298,6 +298,18 @@
             const div = document.createElement("div");
             div.textContent = texto;
             return div.innerHTML;
+        }
+
+        // Detecta o tipo de arquivo pela extensão no link (funciona com links do Drive também,
+        // já que o Drive costuma manter o nome do arquivo original na URL ou no texto do link)
+        function rotuloDoLink(link) {
+            const l = link.toLowerCase();
+            if (l.includes(".pdf")) return "📄 Abrir PDF";
+            if (l.includes(".ppt") || l.includes(".pptx") || l.includes("presentation")) return "📊 Abrir apresentação";
+            if (l.includes(".doc") || l.includes(".docx") || l.includes("document")) return "📝 Abrir documento";
+            if (l.includes(".xls") || l.includes(".xlsx") || l.includes("spreadsheets")) return "📈 Abrir planilha";
+            if (l.includes("drive.google.com") || l.includes("docs.google.com")) return "📁 Abrir no Drive";
+            return "🔗 Abrir material";
         }
 
         document.getElementById("btn-tema").addEventListener("click", () => {
